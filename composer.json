@@ -23,7 +23,7 @@
         "comely-io/data-types": "^1.0",
         "guzzlehttp/guzzle": "^7.2",
         "trim06/web3.php": "^1.0",
-        "kornrunner/secp256k1": "^0.2",
+        "kornrunner/secp256k1": "^0.3",
         "simplito/elliptic-php": "^1.0",
         "ext-json": "*",
         "ext-bcmath": "*"
