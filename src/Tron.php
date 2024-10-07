@@ -696,6 +696,21 @@ class Tron implements TronInterface
         return array_merge($response, $signedTransaction);
     }
 
+    public function createTransaction(string $to, float $amount, string $from, string $message = null): array
+    {
+        $transaction = $this->transactionBuilder->sendTrx($to, $amount, $from, $message);
+
+        return $transaction;
+    }
+
+
+    public function sendSignedTransaction(array $signedTransaction): array
+    {
+        $response = $this->sendRawTransaction($signedTransaction);
+        
+        return array_merge($response, $signedTransaction);
+    }
+
     /**
      * Send token transaction to Blockchain
      *
