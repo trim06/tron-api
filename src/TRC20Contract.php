@@ -305,6 +305,38 @@ class TRC20Contract
         return array_merge($response, $signedTransaction);
     }
 
+    public function createTransaction(string $to, string $amount, string $from): array
+    {
+        $feeLimitInSun = bcmul((string)$this->feeLimit, (string)self::TRX_TO_SUN);
+
+        if (!is_numeric($this->feeLimit) OR $this->feeLimit <= 0) {
+            throw new TRC20Exception('fee_limit is required.');
+        } else if($this->feeLimit > 1000) {
+            throw new TRC20Exception('fee_limit must not be greater than 1000 TRX.');
+        }
+
+        $tokenAmount = bcmul($amount, bcpow("10", (string)$this->decimals(), 0), 0);
+
+        $transfer = $this->_tron->getTransactionBuilder()
+            ->triggerSmartContract(
+                $this->abiData,
+                $this->_tron->address2HexString($this->contractAddress),
+                'transfer',
+                [$this->_tron->address2HexString($to), $tokenAmount],
+                $feeLimitInSun,
+                $this->_tron->address2HexString($from)
+            );
+
+        return $transfer;
+    }
+
+    public function sendSignedTransaction(array $signedTransaction): array
+    {
+        $response = $this->_tron->sendRawTransaction($signedTransaction);
+        
+        return array_merge($response, $signedTransaction);
+    }
+
     /**
      *  TRC20 All transactions
      *
